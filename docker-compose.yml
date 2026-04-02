@@ -1,0 +1,28 @@
+version: "3.8"
+
+services:
+  redis:
+    image: redis:7
+    ports:
+      - "6379:6379"
+
+  mongo:
+    image: mongo
+    ports:
+      - "27017:27017"
+
+  api:
+    build: .
+    command: node src/app.js
+    ports:
+      - "3001:3001"
+    depends_on:
+      - redis
+      - mongo
+
+  worker:
+    build: .
+    command: node src/worker.js
+    depends_on:
+      - redis
+      - mongo
